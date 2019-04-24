@@ -13,18 +13,20 @@ class Map extends StatefulWidget {
 class _MapState extends State<Map> {
   Geolocator geolocator = Geolocator();
 
+  Position userLocation;
+
   Future<Position> _getLocation() async {
     Position currentLocation;
+
+    // 这里可以判断用户定位是否不可用
+    /*GeolocationStatus permission = await geolocator.checkGeolocationPermissionStatus();
+    print(permission);*/
 
     try {
       currentLocation = await geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.best);
-
     } on PlatformException catch (e) {
-      print('error-->${e}');
-      if (e.code == 'PERMISSION_DENIED') {
-        Toast.show(context, 'Permission denied', icons: Icons.warning);
-      }
+      print('e-->${e}');
       currentLocation = null;
     }
 
@@ -35,6 +37,10 @@ class _MapState extends State<Map> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    _getLocation().then((result) {
+      userLocation = result;
+    });
   }
 
   @override
@@ -44,13 +50,14 @@ class _MapState extends State<Map> {
 
     _getLocation().then((result) {
       print('result-->${result}');
-      /*print('latitude-->${result.latitude}');
+      print('latitude-->${result.latitude}');
       print('longitude-->${result.longitude}');
       print('accuracy-->${result.accuracy}');
       print('altitude-->${result.altitude}');
       print('speed-->${result.speed}');
       print('speedAccuracy-->${result.speedAccuracy}');
-      print('heading-->${result.heading}');*/
+      print('heading-->${result.heading}');
+      userLocation = result;
     });
   }
 
