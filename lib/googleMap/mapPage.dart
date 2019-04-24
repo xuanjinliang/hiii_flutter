@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
 import 'package:hiii_flutter/component/toast.dart';
 
@@ -11,24 +11,15 @@ class Map extends StatefulWidget {
 }
 
 class _MapState extends State<Map> {
-  Future<LocationData> _getLocation() async {
-    LocationData currentLocation;
+  Geolocator geolocator = Geolocator();
 
-    Location location = Location();
-    location.changeSettings(accuracy: LocationAccuracy.NAVIGATION);
-    bool reqPermission = await location.requestPermission();
-    bool _permission = await location.hasPermission();
-
-    print('reqPermission-->${reqPermission}, _permission-->${_permission}');
+  Future<Position> _getLocation() async {
+    Position currentLocation;
 
     try {
-      currentLocation = await location.getLocation();
-      print('currentLocation-->${currentLocation}');
+      currentLocation = await geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
 
-      location.onLocationChanged().listen((LocationData currentLocation) {
-        print(currentLocation.latitude);
-        print(currentLocation.longitude);
-      });
     } on PlatformException catch (e) {
       print('error-->${e}');
       if (e.code == 'PERMISSION_DENIED') {
@@ -52,14 +43,14 @@ class _MapState extends State<Map> {
     super.reassemble();
 
     _getLocation().then((result) {
-      print('latitude-->${result.latitude}');
+      print('result-->${result}');
+      /*print('latitude-->${result.latitude}');
       print('longitude-->${result.longitude}');
       print('accuracy-->${result.accuracy}');
       print('altitude-->${result.altitude}');
       print('speed-->${result.speed}');
       print('speedAccuracy-->${result.speedAccuracy}');
-      print('heading-->${result.heading}');
-      print('time-->${result.time}');
+      print('heading-->${result.heading}');*/
     });
   }
 

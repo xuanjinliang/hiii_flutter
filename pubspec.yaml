@@ -30,6 +30,7 @@ dependencies:
   json_serializable: ^2.1.1
   intl: ^0.15.8
   google_maps_flutter: ^0.5.7
+  geolocator: ^4.0.0
 
 dev_dependencies:
   flutter_test:
