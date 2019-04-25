@@ -4,6 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
 import 'package:hiii_flutter/component/toast.dart';
+import 'package:hiii_flutter/component/config.dart';
+import 'package:hiii_flutter/component/location.dart';
 
 class Map extends StatefulWidget {
   @override
@@ -11,36 +13,19 @@ class Map extends StatefulWidget {
 }
 
 class _MapState extends State<Map> {
-  Geolocator geolocator = Geolocator();
-
-  Position userLocation;
-
-  Future<Position> _getLocation() async {
-    Position currentLocation;
-
-    // 这里可以判断用户定位是否不可用
-    /*GeolocationStatus permission = await geolocator.checkGeolocationPermissionStatus();
-    print(permission);*/
-
-    try {
-      currentLocation = await geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best);
-    } on PlatformException catch (e) {
-      print('e-->${e}');
-      currentLocation = null;
-    }
-
-    return currentLocation;
-  }
+  Completer<GoogleMapController> _controller = Completer();
+  Position userLocation = Config.POSITION;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    _getLocation().then((result) {
-      userLocation = result;
-    });
+    Location().getLocation().then((res) => {
+          setState(() {
+            userLocation = res;
+          })
+        });
   }
 
   @override
@@ -48,25 +33,32 @@ class _MapState extends State<Map> {
     // TODO: implement reassemble
     super.reassemble();
 
-    _getLocation().then((result) {
-      print('result-->${result}');
-      print('latitude-->${result.latitude}');
-      print('longitude-->${result.longitude}');
-      print('accuracy-->${result.accuracy}');
-      print('altitude-->${result.altitude}');
-      print('speed-->${result.speed}');
-      print('speedAccuracy-->${result.speedAccuracy}');
-      print('heading-->${result.heading}');
-      userLocation = result;
-    });
+    print('result-->${userLocation}');
+    print('latitude-->${userLocation.latitude}');
+    print('longitude-->${userLocation.longitude}');
+    print('accuracy-->${userLocation.accuracy}');
+    print('altitude-->${userLocation.altitude}');
+    print('speed-->${userLocation.speed}');
+    print('speedAccuracy-->${userLocation.speedAccuracy}');
+    print('heading-->${userLocation.heading}');
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Center(
-      child: Container(),
-    );
+    return Scaffold(
+        body: GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: CameraPosition(
+          target: LatLng(userLocation.latitude, userLocation.longitude),
+          zoom: 8),
+      rotateGesturesEnabled: true,
+      scrollGesturesEnabled: true,
+      tiltGesturesEnabled: true,
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
+    ));
   }
 
 /*Completer<GoogleMapController> _controller = Completer();

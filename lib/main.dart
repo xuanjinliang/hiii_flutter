@@ -7,7 +7,10 @@ import 'package:hiii_flutter/route/route.dart';
 import 'package:hiii_flutter/login/login.dart';
 import 'package:hiii_flutter/component/commonText.dart';
 
-void main() => runApp(MyApp());
+void main(){
+  Config.getPosition();
+  return runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -122,17 +125,17 @@ class _SplashPageState extends State<SplashPage> {
               fit: BoxFit.cover)),
       child: Center(
         child: Container(
-          width: ScreenUtil().setWidth(100),
-          height: ScreenUtil().setWidth(100),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border.all(
-                width: 1, style: BorderStyle.solid, color: Colors.white),
-            borderRadius: BorderRadius.all(Radius.circular(50)),
-            color: Color.fromRGBO(255, 255, 255, 0.1),
-          ),
-          child: CommonText(setCount.toString(), align: TextAlign.center, color: Colors.white, size: 48)
-        ),
+            width: ScreenUtil().setWidth(100),
+            height: ScreenUtil().setWidth(100),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              border: Border.all(
+                  width: 1, style: BorderStyle.solid, color: Colors.white),
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+              color: Color.fromRGBO(255, 255, 255, 0.1),
+            ),
+            child: CommonText(setCount.toString(),
+                align: TextAlign.center, color: Colors.white, size: 48)),
       ),
     );
   }

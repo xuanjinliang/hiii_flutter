@@ -68,20 +68,20 @@ class ToastView {
         assert(overlayEntry != null),
         assert(controller != null);
 
-  _show() async {
+  void _show() async {
     overlayState.insert(overlayEntry);
     this.controller.forward();
     await Future.delayed(Duration(milliseconds: this.duration));
     this.close();
   }
 
-  close() async {
+  void close() async {
     this.controller.reverse();
     await Future.delayed(Duration(milliseconds: this.duration));
     this.destroy();
   }
 
-  destroy(){
+  void destroy(){
     if (state) {
       return;
     }
